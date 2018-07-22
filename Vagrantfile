@@ -1,21 +1,16 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-# All Vagrant configuration is done below. The "2" in Vagrant.configure
-# configures the configuration version (we support older styles for
-# backwards compatibility). Please don't change it unless you know what
-# you're doing.
 Vagrant.configure("2") do |config|
-  # The most common configuration options are documented and commented below.
-  # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
 
-  # Every Vagrant development environment requires a box. You can search for
-  # boxes at https://vagrantcloud.com/search.
+  config.hostmanager.enabled = true
+
   config.vm.define "orderer" do |b|
     b.vm.box = "bento/ubuntu-18.04"
     b.vm.hostname = "orderer"
     b.vm.network "private_network", ip: "192.168.33.10"
+    b.hostmanager.aliases = %w(orderer.example.com)
     b.vm.provider "virtualbox" do |v|
       v.memory = 512
       v.cpus = 2
@@ -27,6 +22,7 @@ Vagrant.configure("2") do |config|
     b.vm.provision "shell", inline: <<-SHELL
       apt-get update && apt-get install -y docker-compose 
       rm -rf /org && cp -a /vagrant /org && echo OK..
+      cd /org/network && chmod +x teardown.sh && ./teardown.sh
       cd /org/network && chmod +x build.sh && ./build.sh orderer
     SHELL
   end
@@ -34,6 +30,7 @@ Vagrant.configure("2") do |config|
     org.vm.box = "bento/ubuntu-18.04"
     org.vm.hostname = "org1"
     org.vm.network "private_network", ip: "192.168.33.11"
+    org.hostmanager.aliases = %w(ca.org1.example.com peer0.org1.example.com peer1.org1.example.com)
     org.vm.provider "virtualbox" do |v|
       v.memory = 512
       v.cpus = 2
@@ -46,6 +43,7 @@ Vagrant.configure("2") do |config|
       apt-get update && apt-get install -y docker-compose && apt-get install -y openjdk-8-jdk && apt-get install -y maven
       rm -rf /org && cp -a /vagrant /org && echo OK..
       chmod +x /org/build_client.sh && sudo -u vagrant /org/build_client.sh
+      cd /org/network && chmod +x teardown.sh && ./teardown.sh
       cd /org/network && chmod +x build.sh && ./build.sh org1
     SHELL
   end
@@ -53,6 +51,7 @@ Vagrant.configure("2") do |config|
     org.vm.box = "bento/ubuntu-18.04"
     org.vm.hostname = "org2"
     org.vm.network "private_network", ip: "192.168.33.12"
+    org.hostmanager.aliases = %w(ca.org2.example.com peer0.org2.example.com peer1.org2.example.com)
     org.vm.provider "virtualbox" do |v|
       v.memory = 512
       v.cpus = 2
@@ -65,6 +64,7 @@ Vagrant.configure("2") do |config|
       apt-get update && apt-get install -y docker-compose && apt-get install -y openjdk-8-jdk && apt-get install -y maven
       rm -rf /org && cp -a /vagrant /org && echo OK..
       chmod +x /org/build_client.sh && sudo -u vagrant /org/build_client.sh
+      cd /org/network && chmod +x teardown.sh && ./teardown.sh
       cd /org/network && chmod +x build.sh && ./build.sh org2
     SHELL
   end
@@ -76,3 +76,4 @@ Vagrant.configure("2") do |config|
   # config.vm.synced_folder "../data", "/vagrant_data"
 
 end
+
