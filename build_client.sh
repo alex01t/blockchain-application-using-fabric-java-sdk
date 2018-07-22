@@ -6,7 +6,7 @@ exit 0
 
       cd /org/network_resources && java -cp blockchain-client.jar org.app.network.CreateChannel
       cd /org/network_resources && java -cp blockchain-client.jar org.app.network.DeployInstantiateChaincode
-      cd /org/network_resources && java -cp blockchain-client.jar org.app.user.RegisterEnrollUser
+      # cd /org/network_resources && java -cp blockchain-client.jar org.app.user.RegisterEnrollUser
       cd /org/network_resources && java -cp blockchain-client.jar org.app.chaincode.invocation.InvokeChaincode
       cd /org/network_resources && java -cp blockchain-client.jar org.app.chaincode.invocation.QueryChaincode
 
