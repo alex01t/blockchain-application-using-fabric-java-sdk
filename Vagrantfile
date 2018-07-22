@@ -29,8 +29,8 @@ Vagrant.configure("2") do |config|
 
       cd /org/network && chmod +x build.sh && ./build.sh && echo OK..
 
-      cd /org/java && mvn install && cd target && cp blockchain-java-sdk-0.0.1-SNAPSHOT-jar-with-dependencies.jar blockchain-client.jar
-      cp /org/java/target/blockchain-client.jar /org/network_resources && echo OK..
+      cd /org/java && echo === building Java client. See logs in /org/maven.log === && mvn clean install > /org/maven.log 2>&1 && echo OK..
+      cd /org/java/target && cp blockchain-java-sdk-0.0.1-SNAPSHOT-jar-with-dependencies.jar /org/network_resources/blockchain-client.jar
 
       cd /org/network_resources && java -cp blockchain-client.jar org.app.network.CreateChannel
       cd /org/network_resources && java -cp blockchain-client.jar org.app.network.DeployInstantiateChaincode
