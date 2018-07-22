@@ -3,9 +3,14 @@
 # Exit on first error, print all commands.
 set -e
 
+F=docker-compose
+if [ x$1 != x ]; then
+	F=$1
+fi
+
 #Start from here
 echo -e "\nStopping the previous network (if any)"
-docker-compose -f docker-compose.yml down
+docker-compose -f $F.yml down
 
 # If need to re-generate the artifacts, uncomment the following lines and run
 #
@@ -18,7 +23,7 @@ docker-compose -f docker-compose.yml down
 #
 # Create and Start the Docker containers for the network
 echo -e "\nSetting up the Hyperledger Fabric 1.1 network"
-docker-compose -f docker-compose.yml up -d
+docker-compose -f $F.yml up -d
 sleep 15
 echo -e "\nNetwork setup completed!!\n"
 
